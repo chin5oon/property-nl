@@ -30,8 +30,7 @@ def prediction(age_at_sale, Dist_Sch_Label, Distance_MRTexit, TenureType_Ind,
         
         #folder = Path("C:/Users/kwach/OneDrive/Desktop/0. Capstone/model/")
         file2 =  str(district) + "_epmodel.pkl"
-        path = file2
-        with open(path, "rb") as f:
+        with open(file2, "rb") as f:
             epmodel = pickle.load(f)
         
         prediction = epmodel.predict([[age_at_sale, Dist_Sch_Label, Distance_MRTexit, TenureType_Ind, 
@@ -56,8 +55,7 @@ def price(age_at_sale, Dist_Sch_Label, Distance_MRTexit, TenureType_Ind,
     
     #folder = Path("C:/Users/kwach/OneDrive/Desktop/0. Capstone/model/")
     file =  str(district) + "_ensemble_model.pkl"
-    path = file
-    with open(path, "rb") as f:
+    with open(file, "rb") as f:
         model = pickle.load(f)
     
     p = model.predict([[age_at_sale, Dist_Sch_Label, Distance_MRTexit, TenureType_Ind, 
