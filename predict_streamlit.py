@@ -7,7 +7,6 @@ import datetime
 import numpy as np
 import pandas as pd
 import pickle
-from pathlib import Path
 
 # import pyautogui # for reset button: pip install pyautogui
 
@@ -107,14 +106,7 @@ def main():
     df.loc[((df['TenureType_Ind'] == "Freehold")) , 'TenureType_Ind'] = 1
     df.loc[((df['TenureType_Ind'] == "99-yr")) , 'TenureType_Ind'] = 0
 
-
-    #Split dataset into non-landed
-
-    df_nl = df[~((df['Property.Type'] == 'Detached House'))]
-    df_nl = df_nl[~((df_nl['Property.Type'] == 'Semi-Detached House'))] 
-    df_nl = df_nl[~((df_nl['Property.Type'] == 'Terrace House'))] 
-
-    project_list = df_nl['Project.Name'].unique().tolist()
+    project_list = df['Project.Name'].unique().tolist()
     
     #display the front end aspect
     st.markdown(html_temp, unsafe_allow_html = True)
@@ -128,7 +120,7 @@ def main():
     if choice == "By Project Name":
         proj = st.sidebar.selectbox("Choose the project:", project_list)
         st.write("You selected:", proj)
-        df1 = df_nl[df_nl['Project.Name'] == proj]
+        df1 = df[df['Project.Name'] == proj]
         district = df1["Postal.District"].mode()
         age_at_sale = datetime.date.today().year - df1["Completion Year"].max()
         Dist_Sch_Label = df1["Dist_Sch_Label"].mode()
