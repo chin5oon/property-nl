@@ -135,7 +135,8 @@ def main():
         st.write('Tenure Type', TenureType_Ind.values[0])
         st.write('Maximum level of development', maxlevel.values[0])
         
-        df1 = df1[["Date", "Address", "Avg area sqf", "Transacted.Price....", "Unit.Price....psf.", "Type.of.Sale"]]
+        df1[""Unit.Price....psf."] = df["Transacted.Price...."] / df["Avg area sqf"]
+	df1 = df1[["Date", "Address", "Avg area sqf", "Transacted.Price....", "Unit.Price....psf.", "Type.of.Sale"]]
 
         
     else:
