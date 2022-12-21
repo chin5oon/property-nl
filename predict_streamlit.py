@@ -137,8 +137,7 @@ def main():
         
         df1["Unit.Price....psf."] = df["Transacted.Price...."] / df["Avg area sqf"]
 	df1 = df1[["Date", "Address", "Avg area sqf", "Transacted.Price....", "Unit.Price....psf.", "Type.of.Sale"]]
-
-        
+	
     else:
         district = st.sidebar.selectbox('District', ([1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,
                                               16,17,18,19,20,21,22,23,25,26,27,28]))
