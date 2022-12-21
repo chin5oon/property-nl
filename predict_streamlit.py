@@ -116,23 +116,23 @@ def main():
     choice = st.sidebar.radio('How do you want to input', ("By Project Name", "By Manual Input"))
     
     if choice == "By Project Name":
-        proj = st.sidebar.selectbox("Choose the project:", project_list)
-        st.write("You selected:", proj)
+	proj = st.sidebar.selectbox("Choose the project:", project_list)
+	st.write("You selected:", proj)
         df1 = df[df['Project.Name'] == proj]
         district = df1["Postal.District"].mode()
-        age_at_sale = datetime.date.today().year - df1["Completion Year"].max()
-        Dist_Sch_Label = df1["Dist_Sch_Label"].mode()
-        sch = df1["Nearest Sch"].mode()
+        st.write('District', district.values[0])
+	age_at_sale = datetime.date.today().year - df1["Completion Year"].max()
+        st.write('age at sale', age_at_sale)
+	Dist_Sch_Label = df1["Dist_Sch_Label"].mode()
+        st.write('Sch Label', Dist_Sch_Label.values[0], "(", sch.values[0], ")")
+	sch = df1["Nearest Sch"].mode()
         Distance_MRTexit = df1["Distance_Stn"].mode()
         stn = df1["Nearest Stn"].mode()
-        TenureType_Ind = df1["TenureType_Ind"].mode()
-        maxlevel = df1["maxLevel"].mode()
-	st.write('District', district.values[0])
-        st.write('age at sale', age_at_sale)
-        st.write('Sch Label', Dist_Sch_Label.values[0], "(", sch.values[0], ")")
         st.write('Distance from MRT (km)', Distance_MRTexit.values[0], "(", stn.values[0], ")")
+	TenureType_Ind = df1["TenureType_Ind"].mode()
         st.write('Tenure Type', TenureType_Ind.values[0])
-        st.write('Maximum level of development', maxlevel.values[0])
+	maxlevel = df1["maxLevel"].mode()
+	st.write('Maximum level of development', maxlevel.values[0])
 	
     else:
         district = st.sidebar.selectbox('District', ([1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,
