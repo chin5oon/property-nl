@@ -127,15 +127,15 @@ def main():
         stn = df1["Nearest Stn"].mode()
         TenureType_Ind = df1["TenureType_Ind"].mode()
         maxlevel = df1["maxLevel"].mode()
-        
-        st.write('District', district.values[0])
+        df1["Unit.Price....psf."] = df1["Transacted.Price...."] / df1["Avg area sqf"]
+        df1 = df1[["Date", "Address", "Avg area sqf", "Transacted.Price....", "Unit.Price....psf.", "Type.of.Sale"]]
+	
+	st.write('District', district.values[0])
         st.write('age at sale', age_at_sale)
         st.write('Sch Label', Dist_Sch_Label.values[0], "(", sch.values[0], ")")
         st.write('Distance from MRT (km)', Distance_MRTexit.values[0], "(", stn.values[0], ")")
         st.write('Tenure Type', TenureType_Ind.values[0])
         st.write('Maximum level of development', maxlevel.values[0])
-	df1["Unit.Price....psf."] = df1["Transacted.Price...."] / df1["Avg area sqf"]
-	df1 = df1[["Date", "Address", "Avg area sqf", "Transacted.Price....", "Unit.Price....psf.", "Type.of.Sale"]]
 	
     else:
         district = st.sidebar.selectbox('District', ([1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,
