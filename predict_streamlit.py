@@ -127,8 +127,6 @@ def main():
         stn = df1["Nearest Stn"].mode()
         TenureType_Ind = df1["TenureType_Ind"].mode()
         maxlevel = df1["maxLevel"].mode()
-        df1["Unit.Price....psf."] = df1["Transacted.Price...."] / df1["Avg area sqf"]
-        df1 = df1[["Date", "Address", "Avg area sqf", "Transacted.Price....", "Unit.Price....psf.", "Type.of.Sale"]]
 	
 	st.write('District', district.values[0])
         st.write('age at sale', age_at_sale)
@@ -189,6 +187,8 @@ def main():
     if choice == "By Project Name":
         df1["Date"] = df1["Date"].astype('datetime64[ns]')
         df1 = df1.sort_values(by = ['Date'], ascending = False)
+	df1["Unit.Price....psf."] = df1["Transacted.Price...."] / df1["Avg area sqf"]
+        df1 = df1[["Date", "Address", "Avg area sqf", "Transacted.Price....", "Unit.Price....psf.", "Type.of.Sale"]]
         df1
         st.success("App is working!!") # other tags include st.error, st.warning, st.help etc.
     else:
