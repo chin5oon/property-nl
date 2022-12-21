@@ -134,7 +134,7 @@ def main():
         st.write('Distance from MRT (km)', Distance_MRTexit.values[0], "(", stn.values[0], ")")
         st.write('Tenure Type', TenureType_Ind.values[0])
         st.write('Maximum level of development', maxlevel.values[0])
-	df1["Unit.Price....psf."] = df["Transacted.Price...."] / df["Avg area sqf"]
+	df1["Unit.Price....psf."] = df1["Transacted.Price...."] / df1["Avg area sqf"]
 	df1 = df1[["Date", "Address", "Avg area sqf", "Transacted.Price....", "Unit.Price....psf.", "Type.of.Sale"]]
 	
     else:
