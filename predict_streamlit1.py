@@ -88,6 +88,7 @@ def main():
 
     #load file
     df = pd.read_csv('transactions_full_median.csv')
+    m = pd.read_csv('nl_resale_median_district.csv')
     
     #Calculate age of property when transaction took place
     df.loc[((df['Completion Year'] == "Uncompleted")) , 'Completion Year'] = df['year']
@@ -122,6 +123,7 @@ def main():
         st.write("You selected:", proj)
         df1 = df_nl[df_nl['Project.Name'] == proj]
         district = df1["Postal.District"].mode()
+	m1 = m[m['Postal.District'] == int(district)]
         age_at_sale = datetime.date.today().year - df1["Completion Year"].max()
         Dist_Sch_Label = df1["Dist_Sch_Label"].mode()
         sch = df1["Nearest Sch"].mode()
@@ -191,8 +193,20 @@ def main():
     
     if choice == "By Project Name":
         df1["Date"] = df1["Date"].astype('datetime64[ns]')
+	m1["month_year"] = m1["month_year"].astype('datetime64[ns]')
         df1 = df1.sort_values(by = ['Date'], ascending = False)
         df1
+        
+        df1['Date'] = df1['Date'].map(lambda x : x.replace(day=1))
+        df1a = df1.groupby(['Date'])['Price (psf)'].median().to_frame().reset_index()
+        temp = proj + " Median Price (psf)"
+        df1a.rename(columns = {'Price (psf)': temp}, inplace = True)
+        df1a = pd.merge(df1a, m1,  how='left', left_on=['Date'], right_on = ['month_year'])
+        df1a.rename(columns = {'Median Price':'District Resale Medium Price (psf)'}, inplace = True)
+        df1a = df1a[["Date", "District Resale Medium Price (psf)", temp]]
+        df1a.set_index('Date', inplace = True)
+        st.line_chart(df1a, width = 0)
+	
         st.success("App is working!!") # other tags include st.error, st.warning, st.help etc.
     else:
         st.success("App is working!!") # other tags include st.error, st.warning, st.help etc.
