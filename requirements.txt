@@ -3,6 +3,7 @@
 # platform: win-64
 streamlit==0.86.0
 scikit-learn==0.23.1
+scipy==1.2.1
 xgboost==1.0.2
 lightgbm == 3.1.1
 seaborn==0.10.1
