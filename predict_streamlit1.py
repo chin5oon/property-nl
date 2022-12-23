@@ -107,10 +107,6 @@ def main():
 
     #Split dataset into non-landed
 
-    df_nl = df[~((df['Property.Type'] == 'Detached House'))]
-    df_nl = df_nl[~((df_nl['Property.Type'] == 'Semi-Detached House'))] 
-    df_nl = df_nl[~((df_nl['Property.Type'] == 'Terrace House'))] 
-
     project_list = df_nl['Project.Name'].unique().tolist()
     
     #display the front end aspect
@@ -142,7 +138,7 @@ def main():
         st.write('Tenure Type', TenureType_Ind.values[0])
         st.write('Maximum level of development', maxlevel.values[0])
         
-        df1 = df1[["Date", "Address", "Avg area sqf", "Transacted.Price....", "Type.of.Sale"]]
+        df1 = df1[["Date", "Address", "Avg area sqf", "Transacted Price", "Price (psf)", "Type.of.Sale"]]
 
         
     else:
