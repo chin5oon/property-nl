@@ -140,7 +140,7 @@ def main():
         st.write('Maximum level of development', maxlevel.values[0])
         
         df1 = df1[["Date", "Address", "Avg area sqf", "Transacted Price", "Price (psf)", "Type.of.Sale"]]
-	m1 = m[m['Postal.District"]==int(district)]
+		m1 = m[m['Postal.District"]==int(district)]
 
         
     else:
