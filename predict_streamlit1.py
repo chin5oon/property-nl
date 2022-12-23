@@ -189,10 +189,10 @@ def main():
     # 	pyautogui.hotkey("ctrl","F5")
 
     # st.balloons()
-    
+    m1 = m[m['Postal.District'] == int(district)]
+	
     if choice == "By Project Name":
         df1["Date"] = df1["Date"].astype('datetime64[ns]')
-	m1 = m[m['Postal.District'] == int(district)]
 	m1["month_year"] = m1["month_year"].astype('datetime64[ns]')
         df1 = df1.sort_values(by = ['Date'], ascending = False)
         df1
