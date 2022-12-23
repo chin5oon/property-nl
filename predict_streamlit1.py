@@ -89,7 +89,7 @@ def main():
     #load file
     df = pd.read_csv('transactions_full_median.csv')
     m = pd.read_csv('nl_resale_median_district.csv')
-    
+
     #Calculate age of property when transaction took place
     df.loc[((df['Completion Year'] == "Uncompleted")) , 'Completion Year'] = df['year']
     
@@ -102,13 +102,13 @@ def main():
     df.loc[((df['TenureType_Ind'] == "999-yr")) , 'TenureType_Ind'] = 1
     df.loc[((df['TenureType_Ind'] == "Freehold")) , 'TenureType_Ind'] = 1
     df.loc[((df['TenureType_Ind'] == "99-yr")) , 'TenureType_Ind'] = 0
-
-
-    #Split dataset into non-landed
-
+    
     project_list = df['Project.Name'].unique().tolist()
     df_nl = df
-	
+    
+    
+    
+    
     #display the front end aspect
     st.markdown(html_temp, unsafe_allow_html = True)
     # let us make infrastructure to provide inputs
@@ -123,6 +123,7 @@ def main():
         st.write("You selected:", proj)
         df1 = df_nl[df_nl['Project.Name'] == proj]
         district = df1["Postal.District"].mode()
+        m1 = m[m['Postal.District'] == int(district)]
         age_at_sale = datetime.date.today().year - df1["Completion Year"].max()
         Dist_Sch_Label = df1["Dist_Sch_Label"].mode()
         sch = df1["Nearest Sch"].mode()
@@ -130,8 +131,7 @@ def main():
         stn = df1["Nearest Stn"].mode()
         TenureType_Ind = df1["TenureType_Ind"].mode()
         maxlevel = df1["maxLevel"].mode()
-        m1["month_year"] = m1["month_year"].astype('datetime64[ns]')
-	
+        
         st.write('District', district.values[0])
         st.write('age at sale', age_at_sale)
         st.write('Sch Label', Dist_Sch_Label.values[0], "(", sch.values[0], ")")
@@ -139,8 +139,7 @@ def main():
         st.write('Tenure Type', TenureType_Ind.values[0])
         st.write('Maximum level of development', maxlevel.values[0])
         
-        df1 = df1[["Date", "Address", "Avg area sqf", "Transacted Price", "Price (psf)", "Type.of.Sale"]]
-		m1 = m[m['Postal.District"]==int(district)]
+        df1 = df1[["Date", "Address", "Avg area sqf", "Transacted.Price....", "Type.of.Sale"]]
 
         
     else:
@@ -191,10 +190,10 @@ def main():
     # 	pyautogui.hotkey("ctrl","F5")
 
     # st.balloons()
-
-	
+    
     if choice == "By Project Name":
         df1["Date"] = df1["Date"].astype('datetime64[ns]')
+        m1["month_year"] = m1["month_year"].astype('datetime64[ns]')
         df1 = df1.sort_values(by = ['Date'], ascending = False)
         df1
         
@@ -207,7 +206,7 @@ def main():
         df1a = df1a[["Date", "District Resale Medium Price (psf)", temp]]
         df1a.set_index('Date', inplace = True)
         st.line_chart(df1a, width = 0)
-	
+        
         st.success("App is working!!") # other tags include st.error, st.warning, st.help etc.
     else:
         st.success("App is working!!") # other tags include st.error, st.warning, st.help etc.
