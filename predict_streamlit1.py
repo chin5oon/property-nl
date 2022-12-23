@@ -130,7 +130,6 @@ def main():
         stn = df1["Nearest Stn"].mode()
         TenureType_Ind = df1["TenureType_Ind"].mode()
         maxlevel = df1["maxLevel"].mode()
-	m1=m[m['Postal.District']==int(district)]
         m1["month_year"] = m1["month_year"].astype('datetime64[ns]')
 	
         st.write('District', district.values[0])
@@ -141,6 +140,7 @@ def main():
         st.write('Maximum level of development', maxlevel.values[0])
         
         df1 = df1[["Date", "Address", "Avg area sqf", "Transacted Price", "Price (psf)", "Type.of.Sale"]]
+	m1 = m[m['Postal.District"]==int(district)]
 
         
     else:
