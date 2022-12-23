@@ -123,7 +123,6 @@ def main():
         st.write("You selected:", proj)
         df1 = df_nl[df_nl['Project.Name'] == proj]
         district = df1["Postal.District"].mode()
-	m1 = m[m['Postal.District'] == int(district)]
         age_at_sale = datetime.date.today().year - df1["Completion Year"].max()
         Dist_Sch_Label = df1["Dist_Sch_Label"].mode()
         sch = df1["Nearest Sch"].mode()
@@ -193,6 +192,7 @@ def main():
     
     if choice == "By Project Name":
         df1["Date"] = df1["Date"].astype('datetime64[ns]')
+	m1 = m[m['Postal.District'] == int(district)]
 	m1["month_year"] = m1["month_year"].astype('datetime64[ns]')
         df1 = df1.sort_values(by = ['Date'], ascending = False)
         df1
