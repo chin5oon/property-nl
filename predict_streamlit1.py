@@ -88,8 +88,6 @@ def main():
 
     #load file
     df = pd.read_csv('transactions_full_median.csv')
-    #drop ENBLOC
-    df = df[((df['ENBLOC'] == 0))]
     
     #Calculate age of property when transaction took place
     df.loc[((df['Completion Year'] == "Uncompleted")) , 'Completion Year'] = df['year']
