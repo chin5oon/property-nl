@@ -131,7 +131,7 @@ def main():
         TenureType_Ind = df1["TenureType_Ind"].mode()
         maxlevel = df1["maxLevel"].mode()
         m1["month_year"] = m1["month_year"].astype('datetime64[ns]')
-    	m1 = m[m['Postal.District'] == int(district)]
+	m1=m[m['Postal.District'] == int(district)]
 	
         st.write('District', district.values[0])
         st.write('age at sale', age_at_sale)
