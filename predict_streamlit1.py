@@ -130,7 +130,9 @@ def main():
         stn = df1["Nearest Stn"].mode()
         TenureType_Ind = df1["TenureType_Ind"].mode()
         maxlevel = df1["maxLevel"].mode()
-        
+        m1["month_year"] = m1["month_year"].astype('datetime64[ns]')
+    	m1 = m[m['Postal.District'] == int(district)]
+	
         st.write('District', district.values[0])
         st.write('age at sale', age_at_sale)
         st.write('Sch Label', Dist_Sch_Label.values[0], "(", sch.values[0], ")")
@@ -189,11 +191,10 @@ def main():
     # 	pyautogui.hotkey("ctrl","F5")
 
     # st.balloons()
-    m1 = m[m['Postal.District'] == int(district)]
+
 	
     if choice == "By Project Name":
         df1["Date"] = df1["Date"].astype('datetime64[ns]')
-	m1["month_year"] = m1["month_year"].astype('datetime64[ns]')
         df1 = df1.sort_values(by = ['Date'], ascending = False)
         df1
         
