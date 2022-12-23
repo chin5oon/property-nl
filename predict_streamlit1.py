@@ -105,8 +105,9 @@ def main():
 
     #Split dataset into non-landed
 
-    project_list = df_nl['Project.Name'].unique().tolist()
-    
+    project_list = df['Project.Name'].unique().tolist()
+    df_nl = df
+	
     #display the front end aspect
     st.markdown(html_temp, unsafe_allow_html = True)
     # let us make infrastructure to provide inputs
