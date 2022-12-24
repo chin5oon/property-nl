@@ -251,6 +251,11 @@ def main():
             l1["Date"] = l1["Date"].astype('datetime64[ns]')
             l1 = l1.sort_values(by = ['Date'], ascending = False)
             l1
+            l1 = l1[["Date", "Price (psf)"]]
+            temp = proj + " Median Price (psf)"
+            l1.rename(columns = {'Price (psf)': temp}, inplace = True)
+            l1.set_index('Date', inplace = True)
+            st.line_chart(l1, width = 0)
             st.success("App is working!!") # other tags include st.error, st.warning, st.help etc.
     else:
         st.success("App is working!!") # other tags include st.error, st.warning, st.help etc.
