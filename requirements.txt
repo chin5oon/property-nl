@@ -11,4 +11,5 @@ xgboost==1.7.2
 lightgbm == 3.1.1
 llvmlite==0.39.1
 numba==0.56.3
+altair==4.2.0
 datetime
