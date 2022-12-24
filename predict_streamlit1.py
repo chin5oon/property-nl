@@ -258,7 +258,7 @@ def main():
                 y=alt.Y("District Resale Median Price:Q", axis = alt.Axis(title = 'Price (psf)'.upper())),
                 color=alt.Color("Legend:N", legend=alt.Legend(
                     orient='none',
-                    legendX=80, legendY=-15,
+                    legendX=10, legendY=-18,
                     direction='horizontal',
                     titleAnchor='middle')) 
             ).mark_line().interactive()
@@ -271,7 +271,7 @@ def main():
                 y=alt.Y(temp + ":Q", axis = alt.Axis(title = ''.upper())),
                 color=alt.Color("Legend:N", legend=alt.Legend(
                     orient='none',
-                    legendX=80, legendY=-15,
+                    legendX=10, legendY=-18,
                     direction='horizontal',
                     titleAnchor='middle')) 
             ).mark_line().interactive()
@@ -304,7 +304,7 @@ def main():
                 y=alt.Y(temp + ":Q"),
                 color=alt.Color("Legend:N", legend=alt.Legend(
                     orient='none',
-                    legendX=80, legendY=-15,
+                    legendX=10, legendY=-18,
                     direction='horizontal',
                     titleAnchor='middle')) 
             ).mark_line().interactive()
