@@ -256,7 +256,11 @@ def main():
             ).encode(
                 x=alt.X("Date:T", axis = alt.Axis(title = 'Date'.upper(), format = ("%b %Y"))),
                 y=alt.Y("District Resale Median Price:Q", axis = alt.Axis(title = 'Price (psf)'.upper())),
-                color="Legend:N"
+                color=alt.Color("Legend:N", legend=alt.Legend(
+                    orient='none',
+                    legendX=80, legendY=-15,
+                    direction='horizontal',
+                    titleAnchor='middle')) 
             ).mark_line().interactive()
             
             line = chart.transform_fold(
@@ -265,7 +269,11 @@ def main():
             ).encode(
                 x=alt.X("Date:T", axis = alt.Axis(title = 'Date'.upper(), format = ("%b %Y"))),
                 y=alt.Y(temp + ":Q", axis = alt.Axis(title = ''.upper())),
-                color="Legend:N"
+                color=alt.Color("Legend:N", legend=alt.Legend(
+                    orient='none',
+                    legendX=80, legendY=-15,
+                    direction='horizontal',
+                    titleAnchor='middle')) 
             ).mark_line().interactive()
                 
             combine = alt.layer(points, line).interactive()
@@ -294,7 +302,11 @@ def main():
             ).encode(
                 x=alt.X("Date:T", axis = alt.Axis(title = 'Date'.upper(), format = ("%b %Y"))),
                 y=alt.Y(temp + ":Q"),
-                color="Legend:N"
+                color=alt.Color("Legend:N", legend=alt.Legend(
+                    orient='none',
+                    legendX=80, legendY=-15,
+                    direction='horizontal',
+                    titleAnchor='middle')) 
             ).mark_line().interactive()
 
             st.altair_chart(line2.interactive(), use_container_width=True)
