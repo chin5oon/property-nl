@@ -89,6 +89,7 @@ def main():
     #load file
     df = pd.read_csv('transactions_full_median.csv')
     m = pd.read_csv('nl_resale_median_district.csv')
+    l = pd.read_csv('transactions_full_landed.csv')
 
     #Calculate age of property when transaction took place
     df.loc[((df['Completion Year'] == "Uncompleted")) , 'Completion Year'] = df['year']
@@ -103,11 +104,23 @@ def main():
     df.loc[((df['TenureType_Ind'] == "Freehold")) , 'TenureType_Ind'] = 1
     df.loc[((df['TenureType_Ind'] == "99-yr")) , 'TenureType_Ind'] = 0
     
-    project_list = df['Project.Name'].unique().tolist()
+    #Calculate age of property when transaction took place
+    l.loc[((l['Completion Year'] == "Uncompleted")) , 'Completion Year'] = l['year']
+    
+    l['Completion Year'] = l['Completion Year'].apply(pd.to_numeric)
+    l['year'] = l['year'].apply(pd.to_numeric)
+
+    
+    #Tenure Type: Freehold/999 yr = 1, 99-yr = 0
+    
+    l.loc[((l['TenureType_Ind'] == "999-yr")) , 'TenureType_Ind'] = 1
+    l.loc[((l['TenureType_Ind'] == "Freehold")) , 'TenureType_Ind'] = 1
+    l.loc[((l['TenureType_Ind'] == "99-yr")) , 'TenureType_Ind'] = 0    
+    
+    nonlanded = df['Project.Name'].unique().tolist()
+    landed = l['Project.Name'].unique().tolist()
+    project_list = nonlanded + landed 
     df_nl = df
-    
-    
-    
     
     #display the front end aspect
     st.markdown(html_temp, unsafe_allow_html = True)
@@ -121,26 +134,50 @@ def main():
     if choice == "By Project Name":
         proj = st.sidebar.selectbox("Choose the project:", project_list)
         st.write("You selected:", proj)
-        df1 = df_nl[df_nl['Project.Name'] == proj]
-        district = df1["Postal.District"].mode()
-        m1 = m[m['Postal.District'] == int(district)]
-        age_at_sale = datetime.date.today().year - df1["Completion Year"].max()
-        Dist_Sch_Label = df1["Dist_Sch_Label"].mode()
-        sch = df1["Nearest Sch"].mode()
-        Distance_MRTexit = df1["Distance_Stn"].mode()
-        stn = df1["Nearest Stn"].mode()
-        TenureType_Ind = df1["TenureType_Ind"].mode()
-        maxlevel = df1["maxLevel"].mode()
+        if proj in nonlanded:
+            df1 = df_nl[df_nl['Project.Name'] == proj]
+            district = df1["Postal.District"].mode()
+            m1 = m[m['Postal.District'] == int(district)]
+            age_at_sale = datetime.date.today().year - df1["Completion Year"].max()
+            Dist_Sch_Label = df1["Dist_Sch_Label"].mode()
+            sch = df1["Nearest Sch"].mode()
+            Distance_MRTexit = df1["Distance_Stn"].mode()
+            stn = df1["Nearest Stn"].mode()
+            TenureType_Ind = df1["TenureType_Ind"].mode()
+            maxlevel = df1["maxLevel"].mode()
         
-        st.write('District', district.values[0])
-        st.write('age at sale', age_at_sale)
-        st.write('Sch Label', Dist_Sch_Label.values[0], "(", sch.values[0], ")")
-        st.write('Distance from MRT (km)', Distance_MRTexit.values[0], "(", stn.values[0], ")")
-        st.write('Tenure Type', TenureType_Ind.values[0])
-        st.write('Maximum level of development', maxlevel.values[0])
-        
-        df1 = df1[["Date", "Address", "Avg area sqf", "Transacted Price", "Price (psf)", "Type.of.Sale"]]
+            st.write('District', district.values[0])
+            st.write('age at sale', age_at_sale)
+            st.write('Sch Label', Dist_Sch_Label.values[0], "(", sch.values[0], ")")
+            st.write('Distance from MRT (km)', Distance_MRTexit.values[0], "(", stn.values[0], ")")
+            st.write('Tenure Type', TenureType_Ind.values[0])
+            st.write('Maximum level of development', maxlevel.values[0])
+            
+            df1 = df1[["Date", "Address", "Avg area sqf", "Transacted Price", "Price (psf)", "Type.of.Sale"]]
 
+            level = st.sidebar.slider('Level', 1, 70, 15)
+            st.write('Level', level)
+
+        else:
+            l1 = l[l['Project.Name'] == proj]
+            district = l1["Postal.District"].mode()
+            age_at_sale = datetime.date.today().year - l1["Completion Year"].max()
+            Dist_Sch_Label = l1["Dist_Sch_Label"].mode()
+            sch = l1["Nearest Sch"].mode()
+            Distance_MRTexit = l1["Distance_Stn"].mode()
+            stn = l1["Nearest Stn"].mode()
+            TenureType_Ind = l1["TenureType_Ind"].mode()
+            maxlevel = 1
+        
+            st.write('District', district.values[0])
+            st.write('age at sale', age_at_sale)
+            st.write('Sch Label', Dist_Sch_Label.values[0], "(", sch.values[0], ")")
+            st.write('Distance from MRT (km)', Distance_MRTexit.values[0], "(", stn.values[0], ")")
+            st.write('Tenure Type', TenureType_Ind.values[0])
+
+            
+            l1 = l1[["Date", "Address", "Avg area sqf", "Transacted Price", "Price (psf)", "Type.of.Sale"]]
+        
         
     else:
         district = st.sidebar.selectbox('District', ([1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,
@@ -162,9 +199,6 @@ def main():
         maxlevel = st.sidebar.slider('Maximum level of development', 1, 70, 20)
         st.write('Maximum level of development', maxlevel)
     
-    level = st.sidebar.slider('Level', 1, 70, 15)
-    st.write('Level', level)
-    
     area = st.sidebar.text_input('Area (square feet)', 1150)
     area = float(area)
     district = int(district)
@@ -177,14 +211,17 @@ def main():
     
     # assessment button
     if st.button("Assess"):
-        est_price = price(age_at_sale, Dist_Sch_Label, Distance_MRTexit, TenureType_Ind, 
-                  level, maxlevel, district) * area
-        est_price = int(est_price)
-        est_price = '{:,.2f}'.format(est_price)
-        st.success('**System assessment says:** Price is estimated to be: ${}'.format(est_price))
-        assessment = prediction(age_at_sale, Dist_Sch_Label, Distance_MRTexit, TenureType_Ind, 
-                                level, maxlevel, area, district)
-        st.success('**System assessment says:** {}'.format(assessment))
+        try:
+            est_price = price(age_at_sale, Dist_Sch_Label, Distance_MRTexit, TenureType_Ind, 
+                      level, maxlevel, district) * area
+            est_price = int(est_price)
+            est_price = '{:,.2f}'.format(est_price)
+            st.success('**System assessment says:** Price is estimated to be: ${}'.format(est_price))
+            assessment = prediction(age_at_sale, Dist_Sch_Label, Distance_MRTexit, TenureType_Ind, 
+                                    level, maxlevel, area, district)
+            st.success('**System assessment says:** {}'.format(assessment))
+        except:
+            st.write('**System is unable to make an assessment.**')
 
     # if st.button("Reset"):
     # 	pyautogui.hotkey("ctrl","F5")
@@ -192,22 +229,29 @@ def main():
     # st.balloons()
     
     if choice == "By Project Name":
-        df1["Date"] = df1["Date"].astype('datetime64[ns]')
-        m1["month_year"] = m1["month_year"].astype('datetime64[ns]')
-        df1 = df1.sort_values(by = ['Date'], ascending = False)
-        df1
-        
-        df1['Date'] = df1['Date'].map(lambda x : x.replace(day=1))
-        df1a = df1.groupby(['Date'])['Price (psf)'].median().to_frame().reset_index()
-        temp = proj + " Median Price (psf)"
-        df1a.rename(columns = {'Price (psf)': temp}, inplace = True)
-        df1a = pd.merge(df1a, m1,  how='left', left_on=['Date'], right_on = ['month_year'])
-        df1a.rename(columns = {'Median Price':'District Resale Medium Price (psf)'}, inplace = True)
-        df1a = df1a[["Date", "District Resale Medium Price (psf)", temp]]
-        df1a.set_index('Date', inplace = True)
-        st.line_chart(df1a, width = 0)
-        
-        st.success("App is working!!") # other tags include st.error, st.warning, st.help etc.
+        if proj in nonlanded:
+            df1["Date"] = df1["Date"].astype('datetime64[ns]')
+            m1["month_year"] = m1["month_year"].astype('datetime64[ns]')
+            df1 = df1.sort_values(by = ['Date'], ascending = False)
+            df1
+            
+            df1['Date'] = df1['Date'].map(lambda x : x.replace(day=1))
+            df1a = df1.groupby(['Date'])['Price (psf)'].median().to_frame().reset_index()
+            temp = proj + " Median Price (psf)"
+            df1a.rename(columns = {'Price (psf)': temp}, inplace = True)
+            df1a = pd.merge(df1a, m1,  how='left', left_on=['Date'], right_on = ['month_year'])
+            df1a.rename(columns = {'Median Price':'District Resale Medium Price (psf)'}, inplace = True)
+            df1a = df1a[["Date", "District Resale Medium Price (psf)", temp]]
+            df1a.set_index('Date', inplace = True)
+            st.line_chart(df1a, width = 0)
+            
+            st.success("App is working!!") # other tags include st.error, st.warning, st.help etc.
+            
+        else:
+            l1["Date"] = l1["Date"].astype('datetime64[ns]')
+            l1 = l1.sort_values(by = ['Date'], ascending = False)
+            l1
+            st.success("App is working!!") # other tags include st.error, st.warning, st.help etc.
     else:
         st.success("App is working!!") # other tags include st.error, st.warning, st.help etc.
         
