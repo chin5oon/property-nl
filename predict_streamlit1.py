@@ -159,6 +159,7 @@ def main():
             st.write('Level', level)
 
         else:
+            st.write("System is not able to make any assessment for landed properties.")
             l1 = l[l['Project.Name'] == proj]
             district = l1["Postal.District"].mode()
             age_at_sale = datetime.date.today().year - l1["Completion Year"].max()
