@@ -7,6 +7,7 @@ import datetime
 import numpy as np
 import pandas as pd
 import pickle
+import altair as alt
 
 # import pyautogui # for reset button: pip install pyautogui
 
@@ -72,7 +73,7 @@ def price(age_at_sale, Dist_Sch_Label, Distance_MRTexit, TenureType_Ind,
 # putting the app related codes in main()
 def main():
     # -- Set page config
-    apptitle = 'Non-Landed Properties in Singapore'
+    apptitle = 'Properties in Singapore'
     st.set_page_config(page_title=apptitle, page_icon='random', 
                        layout= 'wide', initial_sidebar_state="expanded")
     # random icons in the browser tab
@@ -242,13 +243,34 @@ def main():
             
             df1['Date'] = df1['Date'].map(lambda x : x.replace(day=1))
             df1a = df1.groupby(['Date'])['Price (psf)'].median().to_frame().reset_index()
-            temp = proj + " Median Price (psf)"
+            temp = proj + " Median Price"
             df1a.rename(columns = {'Price (psf)': temp}, inplace = True)
             df1a = pd.merge(df1a, m1,  how='left', left_on=['Date'], right_on = ['month_year'])
-            df1a.rename(columns = {'Median Price':'District Resale Medium Price (psf)'}, inplace = True)
-            df1a = df1a[["Date", "District Resale Medium Price (psf)", temp]]
-            df1a.set_index('Date', inplace = True)
-            st.line_chart(df1a, width = 0)
+            df1a.rename(columns = {'Median Price':'District Resale Median Price'}, inplace = True)
+            df1a = df1a[["Date", "District Resale Median Price", temp]]
+            
+            chart = alt.Chart(df1a)
+            points = chart.transform_fold(
+                fold=["District Resale Median Price"],
+                as_=["Legend", "value"]
+            ).encode(
+                x=alt.X("Date:T", axis = alt.Axis(title = 'Date'.upper(), format = ("%b %Y"))),
+                y=alt.Y("District Resale Median Price:Q", axis = alt.Axis(title = 'Price (psf)'.upper())),
+                color="Legend:N"
+            ).mark_line().interactive()
+            
+            line = chart.transform_fold(
+                fold=[temp],
+                as_=["Legend", "value"]
+            ).encode(
+                x=alt.X("Date:T", axis = alt.Axis(title = 'Date'.upper(), format = ("%b %Y"))),
+                y=alt.Y(temp + ":Q", axis = alt.Axis(title = ''.upper())),
+                color="Legend:N"
+            ).mark_line().interactive()
+                
+            combine = alt.layer(points, line).interactive()
+
+            st.altair_chart(combine.interactive(), use_container_width=True)
             
             st.success("App is working!!") # other tags include st.error, st.warning, st.help etc.
             
@@ -261,10 +283,21 @@ def main():
             lp['Transacted Price'] = (lp.apply(lambda x: "{:,}".format(x['Transacted Price']), axis=1))
             lp
             l1 = l1[["Date", "Price (psf)"]]
-            temp = proj + " Median Price (psf)"
+            temp = proj + " Median Price"
             l1.rename(columns = {'Price (psf)': temp}, inplace = True)
-            l1.set_index('Date', inplace = True)
-            st.line_chart(l1, width = 0)
+
+            chart2 = alt.Chart(l1)
+            
+            line2 = chart2.transform_fold(
+                fold=[temp],
+                as_=["Legend", "value"]
+            ).encode(
+                x=alt.X("Date:T", axis = alt.Axis(title = 'Date'.upper(), format = ("%b %Y"))),
+                y=alt.Y(temp + ":Q"),
+                color="Legend:N"
+            ).mark_line().interactive()
+
+            st.altair_chart(line2.interactive(), use_container_width=True)
             st.success("App is working!!") # other tags include st.error, st.warning, st.help etc.
     else:
         st.success("App is working!!") # other tags include st.error, st.warning, st.help etc.
