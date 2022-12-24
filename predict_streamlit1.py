@@ -233,7 +233,11 @@ def main():
             df1["Date"] = df1["Date"].astype('datetime64[ns]')
             m1["month_year"] = m1["month_year"].astype('datetime64[ns]')
             df1 = df1.sort_values(by = ['Date'], ascending = False)
-            df1
+            df1p = df1
+            df1p.rename(columns = {'Avg area sqf':'Area (sqf)'}, inplace = True)
+            df1p['Area (sqf)'] = (df1p.apply(lambda x: "{:,}".format(x['Area (sqf)']), axis=1))
+            df1p['Transacted Price'] = (df1p.apply(lambda x: "{:,}".format(x['Transacted Price']), axis=1))
+            df1p
             
             df1['Date'] = df1['Date'].map(lambda x : x.replace(day=1))
             df1a = df1.groupby(['Date'])['Price (psf)'].median().to_frame().reset_index()
@@ -250,7 +254,11 @@ def main():
         else:
             l1["Date"] = l1["Date"].astype('datetime64[ns]')
             l1 = l1.sort_values(by = ['Date'], ascending = False)
-            l1
+            lp = l1
+            lp.rename(columns = {'Avg area sqf':'Area (sqf)'}, inplace = True)
+            lp['Area (sqf)'] = (lp.apply(lambda x: "{:,}".format(x['Area (sqf)']), axis=1))
+            lp['Transacted Price'] = (lp.apply(lambda x: "{:,}".format(x['Transacted Price']), axis=1))
+            lp
             l1 = l1[["Date", "Price (psf)"]]
             temp = proj + " Median Price (psf)"
             l1.rename(columns = {'Price (psf)': temp}, inplace = True)
