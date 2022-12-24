@@ -247,8 +247,8 @@ def main():
             df1a = pd.merge(df1a, m1,  how='left', left_on=['Date'], right_on = ['month_year'])
             df1a.rename(columns = {'Median Price':'District Resale Medium Price (psf)'}, inplace = True)
             df1a = df1a[["Date", "District Resale Medium Price (psf)", temp]]
-            df1a.set_index('Date', inplace = True)
-            st.line_chart(df1a, width = 0)
+            df1a["Date"] = df1a["Date"].dt.strftime('%Y-%m')
+            st.line_chart(df1a, x= "Date", y=["District Resale Medium Price (psf)", temp], width = 0)
             
             st.success("App is working!!") # other tags include st.error, st.warning, st.help etc.
             
@@ -263,8 +263,8 @@ def main():
             l1 = l1[["Date", "Price (psf)"]]
             temp = proj + " Median Price (psf)"
             l1.rename(columns = {'Price (psf)': temp}, inplace = True)
-            l1.set_index('Date', inplace = True)
-            st.line_chart(l1, width = 0)
+            l1["Date"] = l1["Date"].dt.strftime('%Y-%m')
+            st.line_chart(l1,x= "Date", y= temp, width = 0)
             st.success("App is working!!") # other tags include st.error, st.warning, st.help etc.
     else:
         st.success("App is working!!") # other tags include st.error, st.warning, st.help etc.
