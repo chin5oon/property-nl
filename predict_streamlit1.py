@@ -215,7 +215,7 @@ def main():
     
     # assessment button
     if st.button("Assess"):
-        #try:
+        try:
             est_price = price(age_at_sale, Dist_Sch_Label, Distance_MRTexit, TenureType_Ind, 
                       level, maxlevel, district) * area
             est_price = int(est_price)
@@ -224,8 +224,8 @@ def main():
             assessment = prediction(age_at_sale, Dist_Sch_Label, Distance_MRTexit, TenureType_Ind, 
                                     level, maxlevel, area, district)
             st.success('**System assessment says:** {}'.format(assessment))
-        #except:
-         #   st.write('**System is unable to make an assessment.**')
+        except:
+            st.write('**System is unable to make an assessment.**')
 
     # if st.button("Reset"):
     # 	pyautogui.hotkey("ctrl","F5")
