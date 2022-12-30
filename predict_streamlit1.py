@@ -198,7 +198,8 @@ def main():
         TenureType_Ind = st.sidebar.radio('Tenure Type: 99-yr input 0; 999-yr or freehold input 1',
                                   (0,1))  
         st.write('Tenure Type', TenureType_Ind)
-        level = st.sidebar.text_input('level', 10)
+        level = st.sidebar.slider('Level', 1, 70, 15)
+        st.write('Level', level)
         maxlevel = st.sidebar.text_input('Maximum level of development', 20)
         st.write('Maximum level of development', maxlevel)
     
@@ -214,7 +215,7 @@ def main():
     
     # assessment button
     if st.button("Assess"):
-        try:
+        #try:
             est_price = price(age_at_sale, Dist_Sch_Label, Distance_MRTexit, TenureType_Ind, 
                       level, maxlevel, district) * area
             est_price = int(est_price)
@@ -223,8 +224,8 @@ def main():
             assessment = prediction(age_at_sale, Dist_Sch_Label, Distance_MRTexit, TenureType_Ind, 
                                     level, maxlevel, area, district)
             st.success('**System assessment says:** {}'.format(assessment))
-        except:
-            st.write('**System is unable to make an assessment.**')
+        #except:
+         #   st.write('**System is unable to make an assessment.**')
 
     # if st.button("Reset"):
     # 	pyautogui.hotkey("ctrl","F5")
