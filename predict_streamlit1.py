@@ -193,12 +193,13 @@ def main():
             'School label: less than 1KM input 1; between 1KM to 2KM input 2; more than 2KM input 3',
             (1, 2, 3))
         st.write('Sch Label', Dist_Sch_Label)
-        Distance_MRTexit = st.sidebar.slider('Distance from MRT (km)', 0, 30, 2)
+        Distance_MRTexit = st.sidebar.text_input('Distance from MRT (km)', 2)
         st.write('Distance from MRT (km)', Distance_MRTexit)
         TenureType_Ind = st.sidebar.radio('Tenure Type: 99-yr input 0; 999-yr or freehold input 1',
                                   (0,1))  
         st.write('Tenure Type', TenureType_Ind)
-        maxlevel = st.sidebar.slider('Maximum level of development', 1, 70, 20)
+        level = st.sidebar.text_input('level', 10)
+        maxlevel = st.sidebar.text_input('Maximum level of development', 20)
         st.write('Maximum level of development', maxlevel)
     
     area = st.sidebar.text_input('Area (square feet)', 1150)
