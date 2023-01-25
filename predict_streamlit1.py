@@ -93,7 +93,7 @@ def main():
     l = pd.read_csv('df_all_l.csv')
     roi = pd.read_csv('timeseries_ROI_district.csv')
     
-    
+    roi = roi.iloc[:,1:]
 
     #Calculate age of property when transaction took place
     df.loc[((df['Completion Year'] == "Uncompleted")) , 'Completion Year'] = df['year']
