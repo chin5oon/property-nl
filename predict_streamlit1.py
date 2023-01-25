@@ -62,10 +62,10 @@ def price(age_at_sale, Dist_Sch_Label, Distance_MRTexit, TenureType_Ind,
     p = model.predict([[age_at_sale, Dist_Sch_Label, Distance_MRTexit, TenureType_Ind, 
                       level, rh, district, newsale, resale, subsale]])
     
-    if district == 10 or district == 12: 
-        p = np.expm1(p)
-    else:
-        p = p
+    #if district == 10 or district == 12: 
+    #    p = np.expm1(p)
+    #else:
+    #    p = p
         
     return p
 
@@ -90,14 +90,14 @@ def main():
     #load file
     df = pd.read_csv('transactions_full_median.csv')
     m = pd.read_csv('nl_resale_median_district.csv')
-    l = pd.read_csv('transactions_full_landed.csv')
+    roi = pd.read_csv('timeseries_ROI_district.csv')
 
     #Calculate age of property when transaction took place
     df.loc[((df['Completion Year'] == "Uncompleted")) , 'Completion Year'] = df['year']
+    df.loc[((df['Completion Year'] == "-")) , 'Completion Year'] = df['year']
     
     df['Completion Year'] = df['Completion Year'].apply(pd.to_numeric)
     df['year'] = df['year'].apply(pd.to_numeric)
-
     
     #Tenure Type: Freehold/999 yr = 1, 99-yr = 0
     
@@ -105,18 +105,16 @@ def main():
     df.loc[((df['TenureType_Ind'] == "Freehold")) , 'TenureType_Ind'] = 1
     df.loc[((df['TenureType_Ind'] == "99-yr")) , 'TenureType_Ind'] = 0
     
-    #Calculate age of property when transaction took place
-    l.loc[((l['Completion Year'] == "Uncompleted")) , 'Completion Year'] = l['year']
-    
-    l['Completion Year'] = l['Completion Year'].apply(pd.to_numeric)
-    l['year'] = l['year'].apply(pd.to_numeric)
+    df_l1 = df[((df['Property.Type'] == 'Detached House'))]
+    df_l2 = df[((df['Property.Type'] == 'Semi-Detached House'))]
+    df_l3 = df[((df['Property.Type'] == 'Terrace House'))]
 
+    l = pd.concat([df_l1, df_l2, df_l3], ignore_index=True, sort=False)
     
-    #Tenure Type: Freehold/999 yr = 1, 99-yr = 0
+    df = df[~((df['Property.Type'] == 'Detached House'))]
+    df = df[~((df['Property.Type'] == 'Semi-Detached House'))] 
+    df = df[~((df['Property.Type'] == 'Terrace House'))] 
     
-    l.loc[((l['TenureType_Ind'] == "999-yr")) , 'TenureType_Ind'] = 1
-    l.loc[((l['TenureType_Ind'] == "Freehold")) , 'TenureType_Ind'] = 1
-    l.loc[((l['TenureType_Ind'] == "99-yr")) , 'TenureType_Ind'] = 0    
     
     nonlanded = df['Project.Name'].unique().tolist()
     landed = l['Project.Name'].unique().tolist()
@@ -128,7 +126,6 @@ def main():
     # let us make infrastructure to provide inputs
     # we will add the inputs to side bar
     st.sidebar.info('Provide input using the panel')
-    st.info('Click Assess button below')
  
     choice = st.sidebar.radio('How do you want to input', ("By Project Name", "By Manual Input"))
     
@@ -214,6 +211,7 @@ def main():
     
     
     # assessment button
+    st.info('Click Assess button below to find out (1) estimated price for the property and (2) whether the property is worth buying.')
     if st.button("Assess"):
         try:
             est_price = price(age_at_sale, Dist_Sch_Label, Distance_MRTexit, TenureType_Ind, 
@@ -226,6 +224,23 @@ def main():
             st.success('**System assessment says:** {}'.format(assessment))
         except:
             st.write('**System is unable to make an assessment.**')
+
+    st.info('Display expected ROI by District.')
+    if st.button("Display ROI"):
+        try:
+            tb = roi.sort_values('3Yr-ROI', ascending = False)
+            tb['3Yr-ROI'] = (tb['3Yr-ROI'] * 100).round(2)
+            tb['3Yr-ROI'] = tb['3Yr-ROI'].astype(str)
+            tb['3Yr-ROI'] = tb['3Yr-ROI'] + "%"
+            tb['5Yr-ROI'] = tb['3Yr-ROI'] * 100
+            tb['5Yr-ROI'] = tb['3Yr-ROI'].astype(str)
+            tb['5Yr-ROI'] = tb['3Yr-ROI'] + "%"
+
+            st.dataframe(tb)
+
+        except:
+            st.write('**System is unable to display ROI.**')
+
 
     # if st.button("Reset"):
     # 	pyautogui.hotkey("ctrl","F5")
